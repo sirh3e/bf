@@ -35,8 +35,10 @@ impl Optimizer {
         let mut optimized = vec![];
 
         //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
+        //ToDo optimize [IncVal(5), DecVal(4)] -> [IncVal(1)]
         //ToDo optimize [IncVal(5), DecVal(5)] -> ()
         //ToDo optimize [IncPtr(5), DecPtr(6)] -> [DecPtr(1)]
+        //ToDo optimize [IncPtr(6), DecPtr(5)] -> [IncPtr(1)]
         //ToDo optimize [IncPtr(5), DecPtr(5)] -> ()
         //ToDo optimize []                     -> ()
 
