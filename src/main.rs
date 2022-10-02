@@ -6,6 +6,7 @@ mod ir;
 mod lexer;
 mod parser;
 mod token;
+mod backends;
 
 fn main() {
     let text = "[[+][<++[-+]]]";
