@@ -44,7 +44,7 @@ impl Parser {
                     expressions.push(Expression::Loop(r#loop));
                 }
                 Token::Whitespace => {
-                    todo!()
+                   unreachable!()
                 }
             }
         }
