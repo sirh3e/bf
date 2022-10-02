@@ -1,8 +1,8 @@
 use crate::token::Token;
 
-pub struct Lexer;
+pub struct Tokenizer;
 
-impl Lexer {
+impl Tokenizer {
     pub fn tokenize(text: &str) -> Vec<Token> {
         text.chars().into_iter().map(Self::tokenize_char).collect()
     }

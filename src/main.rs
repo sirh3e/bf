@@ -1,9 +1,9 @@
 use crate::ir::Optimizer;
-use crate::lexer::Lexer;
+use crate::tokenizer::tokenizer;
 use crate::parser::Parser;
 
 mod ir;
-mod lexer;
+mod tokenizer;
 mod parser;
 mod token;
 mod backends;
@@ -11,7 +11,7 @@ mod backends;
 fn main() {
     let text = "[[+][<++[-+]]]";
 
-    let tokens = Lexer::tokenize(text);
+    let tokens = tokenizer::tokenize(text);
 
     let expressions = Parser::parse(&tokens);
     println!("{:?}", expressions);
