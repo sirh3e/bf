@@ -34,6 +34,12 @@ impl Optimizer {
     pub fn optimize(expressions: &[Expression]) -> Vec<Expression> {
         let mut optimized = vec![];
 
+        //ToDo optimize [IncVal(5), DecVal(6)] -> [Dec(1)]
+        //ToDo optimize [IncVal(5), DecVal(5)] -> ()
+        //ToDo optimize [IncPtr(5), DecPtr(6)] -> [DecPtr(1)]
+        //ToDo optimize [IncPtr(5), DecPtr(5)] -> ()
+        //ToDo optimize []                     -> ()
+
         for expression in expressions {
             match (expression, optimized.last()) {
                 (Expression::IncVal(1), Some(&Expression::IncVal(amount))) => {
