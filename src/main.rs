@@ -1,5 +1,9 @@
+mod lexer;
 mod token;
 
+use crate::lexer::Lexer;
+
 fn main() {
-    println!("Hello, world!");
+    let text = "";
+    let tokens = Lexer::tokenize(text);
 }
