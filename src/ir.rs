@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter, write};
+
 #[derive(Debug)]
 pub enum Expression {
     IncVal(u8),
@@ -48,13 +50,13 @@ impl Optimizer {
                     replace_last(&mut optimized, Expression::IncVal(amount + 1))
                 }
                 (Expression::DecVal(1), Some(&Expression::DecVal(amount))) => {
-                    replace_last(&mut optimized, Expression::DecVal(amount - 1))
+                    replace_last(&mut optimized, Expression::DecVal(amount + 1))
                 }
                 (Expression::IncPtr(1), Some(&Expression::IncPtr(amount))) => {
                     replace_last(&mut optimized, Expression::IncPtr(amount + 1))
                 }
                 (Expression::DecPtr(1), Some(&Expression::DecPtr(amount))) => {
-                    replace_last(&mut optimized, Expression::DecPtr(amount - 1))
+                    replace_last(&mut optimized, Expression::DecPtr(amount + 1))
                 }
                 (Expression::Loop(expressions), _) => {
                     optimized.push(Expression::Loop(Self::optimize(expressions)))
