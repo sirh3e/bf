@@ -5,4 +5,16 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "c"
+path = "src/bin/transpilers/c.rs"
+
+[[bin]]
+name = "rust"
+path = "src/bin/transpilers/rust.rs"
+
+[[bin]]
+name = "vm"
+path = "src/bin/vm.rs"
+
 [dependencies]
