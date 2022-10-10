@@ -79,9 +79,6 @@ impl Transpiler {
                     buffer.push_str(&format!("LOOP(\n"));
                     buffer.push_str(&Self::do_transpile(depth + 1, &expression));
 
-                    //buffer.remove(buffer.len() - 1);
-                    //buffer.remove(buffer.len() - 1);
-
                     for _ in 0..depth {
                         buffer.push_str("\t");
                     }
@@ -93,11 +90,7 @@ impl Transpiler {
                 Expression::Input => {}
             }
 
-            let text = match depth {
-                1 => ";\n",
-                _ => ";\n",
-            };
-            buffer.push_str(text);
+            buffer.push_str(";\n");
         }
         buffer
     }
