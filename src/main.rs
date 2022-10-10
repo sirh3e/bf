@@ -1,8 +1,9 @@
 use std::fs;
-use std::io::Read;
+use std::fs::File;
+use std::io::{Read, Write};
 
 use crate::backends::{
-    transpilers::rust::Transpiler,
+    transpilers::{c::Transpiler as CTranspiler, rust::Transpiler as RustTranspiler},
     vm::{Interpreter, Vm},
 };
 use crate::ir::Optimizer;
@@ -31,11 +32,11 @@ fn main() -> std::io::Result<()> {
     let expressions = Optimizer::optimize(&expressions);
     println!("{:?}", expressions);
 
-    let opcodes = Interpreter::interpret(&expressions);
-    println!("{:?}", opcodes);
+    let code = CTranspiler::transpile(&expressions);
+    println!("{}", code);
 
-    let mut vm = Vm::from(&opcodes);
-    vm.run();
+    let mut file = File::create("/home/sirh3e/Programming/vcs/git/local/rust/bf/bin/mandelbrot.c")?;
+    let _ = file.write_all(code.as_bytes())?;
 
     Ok(())
 }
