@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::core::token::Token;
 
 pub struct Tokenizer;
 

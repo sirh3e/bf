@@ -1,4 +1,4 @@
-use crate::ir::Expression;
+use crate::core::ir::Expression;
 
 const MEMORY: &'static str = "MEMORY";
 const POINTER: &'static str = "POINTER";

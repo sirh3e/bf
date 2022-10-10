@@ -1,7 +1,6 @@
 use std::ops::Index;
 
-use crate::ir::Expression;
-use crate::token::Token;
+use crate::core::{ir::Expression, token::Token};
 
 pub struct Parser;
 

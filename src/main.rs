@@ -2,20 +2,16 @@ use std::fs;
 use std::fs::File;
 use std::io::{Read, Write};
 
-use crate::backends::{
-    transpilers::{c::Transpiler as CTranspiler, rust::Transpiler as RustTranspiler},
-    vm::{Interpreter, Vm},
+use crate::{
+    backends::{
+        transpilers::{c::Transpiler as CTranspiler, rust::Transpiler as RustTranspiler},
+        vm::{Interpreter, Vm},
+    },
+    core::{ir::Optimizer, parser::Parser, token::Token, tokenizer::Tokenizer},
 };
-use crate::ir::Optimizer;
-use crate::parser::Parser;
-use crate::token::Token;
-use crate::tokenizer::Tokenizer;
 
 mod backends;
-mod ir;
-mod parser;
-mod token;
-mod tokenizer;
+mod core;
 
 fn main() -> std::io::Result<()> {
     let mut text = String::new();
