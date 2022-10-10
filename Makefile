@@ -24,5 +24,5 @@ configure:
 
 .PHONY: clean
 clean:
-	rm -vf ./bin/*
+	rm -vf ./data/generated/*
 	cargo clean

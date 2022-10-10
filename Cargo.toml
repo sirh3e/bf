@@ -7,14 +7,14 @@ edition = "2021"
 
 [[bin]]
 name = "c"
-path = "src/bin/transpilers/c.rs"
+path = "bin/transpilers/c.rs"
 
 [[bin]]
 name = "rust"
-path = "src/bin/transpilers/rust.rs"
+path = "bin/transpilers/rust.rs"
 
 [[bin]]
 name = "vm"
-path = "src/bin/vm.rs"
+path = "bin/vm.rs"
 
 [dependencies]

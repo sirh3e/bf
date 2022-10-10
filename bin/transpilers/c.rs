@@ -9,23 +9,20 @@ use bf::{
 };
 
 fn main() -> std::io::Result<()> {
+    let r = std::env::current_dir()?;
+    println!("{:?}", r.as_path().as_os_str());
+
     let mut text = String::new();
-    let mut file = File::open("./data/mandelbrot.bf")?;
+    let mut file = File::open("./data/programs/mandelbrot.bf")?;
     let _ = file.read_to_string(&mut text)?;
 
     let tokens = Tokenizer::tokenize(&text);
-    println!("{:?}", tokens);
-
     let expressions = Parser::parse(&tokens);
-    println!("{:?}", expressions);
-
     let expressions = Optimizer::optimize(&expressions);
-    println!("{:?}", expressions);
 
     let code = Transpiler::transpile(&expressions);
-    println!("{}", code);
 
-    let mut file = File::create("./bin/mandelbrot.c")?;
+    let mut file = File::create("./data/generated/mandelbrot.c")?;
     let _ = file.write_all(code.as_bytes())?;
 
     Ok(())
