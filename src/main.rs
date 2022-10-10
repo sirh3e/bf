@@ -19,8 +19,7 @@ mod tokenizer;
 
 fn main() -> std::io::Result<()> {
     let mut text = String::new();
-    let mut file =
-        fs::File::open("/home/sirh3e/Programming/vcs/git/local/rust/bf/bin/mandelbrot.bf")?;
+    let mut file = File::open("./data/mandelbrot.bf")?;
     let _ = file.read_to_string(&mut text)?;
 
     let tokens = Tokenizer::tokenize(&text);
@@ -35,7 +34,7 @@ fn main() -> std::io::Result<()> {
     let code = CTranspiler::transpile(&expressions);
     println!("{}", code);
 
-    let mut file = File::create("/home/sirh3e/Programming/vcs/git/local/rust/bf/bin/mandelbrot.c")?;
+    let mut file = File::create("./bin/mandelbrot.c")?;
     let _ = file.write_all(code.as_bytes())?;
 
     Ok(())
