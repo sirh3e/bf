@@ -1,10 +1,11 @@
-use bf::{
-    backends::transpilers::c::Transpiler,
-    core::{ir::Optimizer, parser::Parser, token::Token, tokenizer::Tokenizer},
-};
 use std::{
     fs::File,
     io::{Read, Write},
+};
+
+use bf::{
+    backends::transpilers::c::Transpiler,
+    core::{ir::Optimizer, parser::Parser, token::Token, tokenizer::Tokenizer},
 };
 
 fn main() -> std::io::Result<()> {
