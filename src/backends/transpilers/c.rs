@@ -34,7 +34,7 @@ typedef unsigned long long usize;
         expressions               \\
     }
 
-#define OUTPUT \\\
+#define OUTPUT \\
     printf(\"%c\", MEMORY[POINTER])
 
 int main() {
