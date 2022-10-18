@@ -11,7 +11,7 @@ typedef unsigned long long usize;
 #define MEMORY memory
 #define MEMORY_LENGTH 30000
 #define MEMORY_DEFINE \\
-    byte MEMORY[MEMORY_LENGTH]
+    byte MEMORY[MEMORY_LENGTH] = { 0 }
 
 #define POINTER pointer
 #define POINTER_DEFINE \\
@@ -31,11 +31,11 @@ typedef unsigned long long usize;
 
 #define LOOP(expressions)         \\
     while(MEMORY[POINTER] != 0) { \\
-        expressions              \\
+        expressions               \\
     }
 
-#define OUTPUT printf(\"%c\", MEMORY[POINTER])
-
+#define OUTPUT \\\
+    printf(\"%c\", MEMORY[POINTER])
 
 int main() {
     POINTER_DEFINE;
