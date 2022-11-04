@@ -1,6 +1,7 @@
 use std::{
     fs::File,
     io::{Read, Write},
+    env::current_dir
 };
 
 use bf::{
@@ -9,8 +10,9 @@ use bf::{
 };
 
 fn main() -> std::io::Result<()> {
-    let r = std::env::current_dir()?;
-    println!("{:?}", r.as_path().as_os_str());
+    let current_path_buffer = current_dir()?;
+    let current_path = current_path_buffer.as_path().as_os_str();
+    println!("{:?}", current_path);
 
     let mut text = String::new();
     let mut file = File::open("./data/programs/mandelbrot.bf")?;
