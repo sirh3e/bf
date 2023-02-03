@@ -83,22 +83,22 @@ struct MemsetOptimizer;
 
 impl Optimize for MemsetOptimizer {
     fn optimize(expressions: &[Expression]) -> Vec<Expression> {
-        let mut new_expressions = vec![];
+        let mut optimized: Vec<Expression> = vec![];
 
         for expression in expressions {
             match expression {
                 Expression::Loop(expressions) => match expressions[..] {
                     [Expression::DecVal(1)] | [Expression::IncVal(1)] => {
-                        new_expressions.push(Expression::Memset)
+                        optimized.push(Expression::Clear)
                     }
-                    _ => new_expressions.push(expression.clone()),
+                    _ => optimized.push(expression.clone()),
                 },
                 _ => {
-                    new_expressions.push(expression.clone());
+                    optimized.push(expression.clone());
                 }
             }
         }
-        new_expressions
+        optimized
     }
 }
 
@@ -120,8 +120,8 @@ mod test {
         };
     }
 
-    #[test_case(test_loop!(vec![Expression::DecVal(1)]), test_expr!(Expression::Memset))]
-    #[test_case(test_loop!(vec![Expression::IncVal(1)]), test_expr!(Expression::Memset))]
+    #[test_case(test_loop!(vec![Expression::DecVal(1)]), test_expr!(Expression::Clear))]
+    #[test_case(test_loop!(vec![Expression::IncVal(1)]), test_expr!(Expression::Clear))]
     #[test_case(test_loop!(vec![Expression::DecPtr(1)]), test_loop!(vec!(Expression::DecPtr(1))))]
     #[test_case(test_loop!(vec![Expression::IncPtr(1)]), test_loop!(vec!(Expression::IncPtr(1))))]
     #[test_case(test_loop!(vec![Expression::DecPtr(1), Expression::IncPtr(1)]), test_loop!(vec!(Expression::DecPtr(1), Expression::IncPtr(1))))]
