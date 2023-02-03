@@ -1,5 +1,5 @@
 use crate::core::{
-    ir::{Expression, Optimizers},
+    ir::{optimizers::Optimizers, Expression},
     parser::Parser,
     tokenizer::Tokenizer,
 };
