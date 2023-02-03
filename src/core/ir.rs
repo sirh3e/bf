@@ -43,7 +43,7 @@ trait Optimizer {
 struct ConcatOptimizer;
 
 impl ConcatOptimizer {
-    fn optimize_stage_01(expressions: &[Expression]) -> Vec<Expression>{
+    fn optimize_stage_01(expressions: &[Expression]) -> Vec<Expression> {
         let mut optimized = vec![];
         for expression in expressions {
             match (expression, optimized.last()) {
@@ -67,7 +67,7 @@ impl ConcatOptimizer {
         }
         optimized
     }
-    fn optimize_stage_02(expression: &[Expression]) -> Vec<Expression>{
+    fn optimize_stage_02(expression: &[Expression]) -> Vec<Expression> {
         let mut optimized = vec![];
         //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
         //ToDo optimize [IncVal(5), DecVal(4)] -> [IncVal(1)]
@@ -81,14 +81,13 @@ impl ConcatOptimizer {
     }
 }
 
-<<<<<<< feature/0002-feature-add_new_ir/memset
 trait Optimize {
     fn optimize(expressions: &[Expression]) -> Vec<Expression>;
 }
 
-struct MemsetOptimizer;
+struct ClearOptimizer;
 
-impl Optimize for MemsetOptimizer {
+impl Optimize for ClearOptimizer {
     fn optimize(expressions: &[Expression]) -> Vec<Expression> {
         let mut optimized: Vec<Expression> = vec![];
 
@@ -111,7 +110,7 @@ impl Optimize for MemsetOptimizer {
 
 #[cfg(test)]
 mod test {
-    use crate::core::ir::{Expression, MemsetOptimizer, Optimize};
+    use crate::core::ir::{ClearOptimizer, Expression, Optimize};
     use pretty_assertions::{assert_eq, assert_ne};
     use test_case::test_case;
 
@@ -134,17 +133,6 @@ mod test {
     #[test_case(test_loop!(vec![Expression::DecPtr(1), Expression::IncPtr(1)]), test_loop!(vec!(Expression::DecPtr(1), Expression::IncPtr(1))))]
     fn optimize_clear(expressions: &[Expression], should: &[Expression]) {
         let actual = ClearOptimizer::optimize(expressions);
-impl Optimizer for ConcatOptimizer {
-    fn optimize(expressions: &[Expression]) -> Vec<Expression> {
-        let expressions = ConcatOptimizer::optimize_state_01(expressions);
-        let expressions = ConcatOptimizer::optimize_stage_02(&expressions);
-        expressions
-    }
-}
-
-pub struct Optimizers;
->>>>>>> moved function into optimize_stage_01
-
         assert_eq!(actual, should);
     }
 }

@@ -101,6 +101,7 @@ impl Transpiler {
                 }
                 Expression::Input => {}
                 Expression::Clear => todo!(),
+                Expression::Copy(_) => todo!(),
             }
 
             let text = match depth {
