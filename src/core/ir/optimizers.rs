@@ -1,4 +1,4 @@
-use crate::core::ir::{optimizers, Expression};
+use crate::core::ir::Expression;
 
 fn replace_last<T>(vec: &mut Vec<T>, expression: T) {
     vec.pop();
@@ -7,6 +7,29 @@ fn replace_last<T>(vec: &mut Vec<T>, expression: T) {
 
 trait Optimizer {
     fn optimize(expressions: &[Expression]) -> Vec<Expression>;
+}
+
+struct ClearOptimizer;
+
+impl Optimizer for ClearOptimizer {
+    fn optimize(expressions: &[Expression]) -> Vec<Expression> {
+        let mut optimized: Vec<Expression> = vec![];
+
+        for expression in expressions {
+            match expression {
+                Expression::Loop(expressions) => match expressions[..] {
+                    [Expression::DecVal(1)] | [Expression::IncVal(1)] => {
+                        optimized.push(Expression::Clear)
+                    }
+                    _ => optimized.push(expression.clone()),
+                },
+                _ => {
+                    optimized.push(expression.clone());
+                }
+            }
+        }
+        optimized
+    }
 }
 
 struct ConcatOptimizer;
@@ -262,20 +285,45 @@ pub struct Optimizers;
 
 impl Optimizers {
     pub fn optimize(expressions: &[Expression]) -> Vec<Expression> {
-        ConcatOptimizer::optimize(expressions)
+        let expressions = ConcatOptimizer::optimize(expressions);
+        let expressions = CopyOptimizer::optimize(&expressions);
+        let expressions = ClearOptimizer::optimize(&expressions);
+        expressions
     }
 }
 
 #[cfg(test)]
 mod test {
-    use crate::core::ir::optimizers::{CopyOptimizer, Optimizer};
+    use crate::core::ir::optimizers::{ClearOptimizer, CopyOptimizer, Optimizer};
     use crate::core::ir::Expression;
-    use pretty_assertions::{assert_eq, assert_ne};
+    use pretty_assertions::assert_eq;
     use test_case::test_case;
 
     #[test_case(vec![Expression::Loop(vec![Expression::DecVal(1), Expression::IncPtr(1), Expression::IncVal(1), Expression::DecPtr(1)])], vec![Expression::Loop(vec!(Expression::Copy(1), Expression::Clear))])]
     fn copy_optimizer(input: Vec<Expression>, excepted: Vec<Expression>) {
         let actual = CopyOptimizer::optimize(&input);
         assert_eq!(actual, excepted);
+    }
+
+    macro_rules! test_loop {
+        ($expressions:expr) => {
+            &vec![Expression::Loop($expressions)]
+        };
+    }
+
+    macro_rules! test_expr {
+        ($expressions:expr) => {
+            &vec![$expressions]
+        };
+    }
+
+    #[test_case(test_loop!(vec![Expression::DecVal(1)]), test_expr!(Expression::Clear))]
+    #[test_case(test_loop!(vec![Expression::IncVal(1)]), test_expr!(Expression::Clear))]
+    #[test_case(test_loop!(vec![Expression::DecPtr(1)]), test_loop!(vec!(Expression::DecPtr(1))))]
+    #[test_case(test_loop!(vec![Expression::IncPtr(1)]), test_loop!(vec!(Expression::IncPtr(1))))]
+    #[test_case(test_loop!(vec![Expression::DecPtr(1), Expression::IncPtr(1)]), test_loop!(vec!(Expression::DecPtr(1), Expression::IncPtr(1))))]
+    fn optimize_clear(expressions: &[Expression], should: &[Expression]) {
+        let actual = ClearOptimizer::optimize(expressions);
+        assert_eq!(actual, should);
     }
 }
