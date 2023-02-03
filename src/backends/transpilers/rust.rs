@@ -100,7 +100,7 @@ impl Transpiler {
                     buffer.push_str(&format!("output!({}, {})", MEMORY, POINTER));
                 }
                 Expression::Input => {}
-                Expression::Memset => todo!(),
+                Expression::Clear => todo!(),
             }
 
             let text = match depth {

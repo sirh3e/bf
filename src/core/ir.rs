@@ -74,3 +74,60 @@ impl Optimizer {
         optimized
     }
 }
+
+trait Optimize {
+    fn optimize(expressions: &[Expression]) -> Vec<Expression>;
+}
+
+struct MemsetOptimizer;
+
+impl Optimize for MemsetOptimizer {
+    fn optimize(expressions: &[Expression]) -> Vec<Expression> {
+        let mut new_expressions = vec![];
+
+        for expression in expressions {
+            match expression {
+                Expression::Loop(expressions) => match expressions[..] {
+                    [Expression::DecVal(1)] | [Expression::IncVal(1)] => {
+                        new_expressions.push(Expression::Memset)
+                    }
+                    _ => new_expressions.push(expression.clone()),
+                },
+                _ => {
+                    new_expressions.push(expression.clone());
+                }
+            }
+        }
+        new_expressions
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::core::ir::{Expression, MemsetOptimizer, Optimize};
+    use pretty_assertions::{assert_eq, assert_ne};
+    use test_case::test_case;
+
+    macro_rules! test_loop {
+        ($expressions:expr) => {
+            &vec![Expression::Loop($expressions)]
+        };
+    }
+
+    macro_rules! test_expr {
+        ($expressions:expr) => {
+            &vec![$expressions]
+        };
+    }
+
+    #[test_case(test_loop!(vec![Expression::DecVal(1)]), test_expr!(Expression::Memset))]
+    #[test_case(test_loop!(vec![Expression::IncVal(1)]), test_expr!(Expression::Memset))]
+    #[test_case(test_loop!(vec![Expression::DecPtr(1)]), test_loop!(vec!(Expression::DecPtr(1))))]
+    #[test_case(test_loop!(vec![Expression::IncPtr(1)]), test_loop!(vec!(Expression::IncPtr(1))))]
+    #[test_case(test_loop!(vec![Expression::DecPtr(1), Expression::IncPtr(1)]), test_loop!(vec!(Expression::DecPtr(1), Expression::IncPtr(1))))]
+    fn optimize_memset(expressions: &[Expression], should: &[Expression]) {
+        let actual = MemsetOptimizer::optimize(expressions);
+
+        assert_eq!(actual, should);
+    }
+}
