@@ -268,7 +268,7 @@ impl Optimizer for CopyOptimizer {
 
                     if let Some(expressions) = context.generate_expressions() {
                         let _ = optimized.split_off(context.start_position);
-                        optimized.push(Expression::Loop(expressions));
+                        optimized.extend(expressions);
                     }
                 }
                 _ => {
