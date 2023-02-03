@@ -8,6 +8,7 @@ pub enum Expression {
     DecVal(u8),
     IncPtr(usize),
     DecPtr(usize),
+    MulVal(usize, u8),
     Copy(usize),
     Clear,
     Loop(Vec<Expression>),
@@ -22,11 +23,12 @@ impl Clone for Expression {
             &Expression::DecVal(amount) => Expression::DecVal(amount),
             &Expression::IncPtr(amount) => Expression::IncPtr(amount),
             &Expression::DecPtr(amount) => Expression::DecPtr(amount),
+            &Expression::MulVal(offset, amount) => Expression::MulVal(offset, amount),
+            &Expression::Copy(offset) => Expression::Copy(offset),
+            &Expression::Clear => Expression::Clear,
             Expression::Loop(expressions) => Expression::Loop(expressions.clone()),
             &Expression::Output => Expression::Output,
             &Expression::Input => Expression::Input,
-            &Expression::Copy(offset) => Expression::Copy(offset),
-            &Expression::Clear => Expression::Clear,
         }
     }
 }

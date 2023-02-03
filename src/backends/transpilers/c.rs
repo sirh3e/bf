@@ -98,6 +98,10 @@ impl Transpiler {
                 Expression::Copy(_) => {
                     todo!()
                 }
+                
+                Expression::MulVal(_, _) => {
+                    todo!()
+                }
             }
 
             buffer.push_str(";\n");
