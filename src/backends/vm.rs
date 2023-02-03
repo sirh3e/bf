@@ -36,7 +36,8 @@ impl Interpreter {
                 Expression::Output => {
                     opcodes.push(Opcode::Print);
                 }
-                Expression::Input => unreachable!(),
+                Expression::Input => todo!(),
+                _ => todo!(),
             };
         }
 

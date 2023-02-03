@@ -87,7 +87,17 @@ impl Transpiler {
                 Expression::Output => {
                     buffer.push_str(&format!("OUTPUT"));
                 }
-                Expression::Input => {}
+                Expression::Input => {
+                    todo!()
+                }
+
+                Expression::Clear => {
+                    todo!()
+                }
+
+                Expression::Copy(_) => {
+                    todo!()
+                }
             }
 
             buffer.push_str(";\n");

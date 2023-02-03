@@ -2,12 +2,14 @@ pub mod optimizers;
 
 use std::fmt::{write, Display, Formatter};
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Expression {
     IncVal(u8),
     DecVal(u8),
     IncPtr(usize),
     DecPtr(usize),
+    Copy(usize),
+    Clear,
     Loop(Vec<Expression>),
     Output,
     Input,
@@ -23,6 +25,8 @@ impl Clone for Expression {
             Expression::Loop(expressions) => Expression::Loop(expressions.clone()),
             &Expression::Output => Expression::Output,
             &Expression::Input => Expression::Input,
+            &Expression::Copy(offset) => Expression::Copy(offset),
+            &Expression::Clear => Expression::Clear,
         }
     }
 }
