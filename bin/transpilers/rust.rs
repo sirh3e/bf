@@ -5,7 +5,7 @@ use std::{
 
 use bf::{
     backends::transpilers::rust::Transpiler,
-    core::{ir::Optimizer, parser::Parser, token::Token, tokenizer::Tokenizer},
+    core::{ir::Optimizers, parser::Parser, token::Token, tokenizer::Tokenizer},
 };
 
 fn main() -> std::io::Result<()> {
@@ -15,7 +15,7 @@ fn main() -> std::io::Result<()> {
 
     let tokens = Tokenizer::tokenize(&text);
     let expressions = Parser::parse(&tokens);
-    let expressions = Optimizer::optimize(&expressions);
+    let expressions = Optimizers::optimize(&expressions);
 
     let code = Transpiler::transpile(&expressions);
 

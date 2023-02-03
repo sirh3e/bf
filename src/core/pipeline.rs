@@ -1,5 +1,5 @@
 use crate::core::{
-    ir::{Expression, Optimizer},
+    ir::{Expression, Optimizers},
     parser::Parser,
     tokenizer::Tokenizer,
 };
@@ -10,7 +10,7 @@ impl Pipeline {
     pub fn execute(text: &str) -> Vec<Expression> {
         let tokens = Tokenizer::tokenize(&text);
         let expressions = Parser::parse(&tokens);
-        let expressions = Optimizer::optimize(&expressions);
+        let expressions = Optimizers::optimize(&expressions);
 
         expressions
     }

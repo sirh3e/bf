@@ -30,9 +30,9 @@ fn replace_last<T>(vec: &mut Vec<T>, expression: T) {
     vec.push(expression);
 }
 
-pub struct Optimizer;
+pub struct Optimizers;
 
-impl Optimizer {
+impl Optimizers {
     pub fn optimize(expressions: &[Expression]) -> Vec<Expression> {
         let mut optimized = vec![];
 
