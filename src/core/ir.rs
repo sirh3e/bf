@@ -36,18 +36,9 @@ trait Optimizer {
 
 struct ConcatOptimizer;
 
-impl Optimizer for ConcatOptimizer {
-    fn optimize(expressions: &[Expression]) -> Vec<Expression> {
+impl ConcatOptimizer {
+    fn optimize_stage_01(expressions: &[Expression]) -> Vec<Expression>{
         let mut optimized = vec![];
-
-        //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
-        //ToDo optimize [IncVal(5), DecVal(4)] -> [IncVal(1)]
-        //ToDo optimize [IncVal(5), DecVal(5)] -> ()
-        //ToDo optimize [IncPtr(5), DecPtr(6)] -> [DecPtr(1)]
-        //ToDo optimize [IncPtr(6), DecPtr(5)] -> [IncPtr(1)]
-        //ToDo optimize [IncPtr(5), DecPtr(5)] -> ()
-        //ToDo optimize []                     -> ()
-
         for expression in expressions {
             match (expression, optimized.last()) {
                 (Expression::IncVal(1), Some(&Expression::IncVal(amount))) => {
@@ -63,13 +54,32 @@ impl Optimizer for ConcatOptimizer {
                     replace_last(&mut optimized, Expression::DecPtr(amount + 1))
                 }
                 (Expression::Loop(expressions), _) => {
-                    optimized.push(Expression::Loop(Self::optimize(expressions)))
+                    optimized.push(Expression::Loop(Self::optimize_stage_01(&expressions)))
                 }
                 (expression, _) => optimized.push(expression.clone()),
             }
         }
+        optimized
+    }
+    fn optimize_stage_02(expression: &[Expression]) -> Vec<Expression>{
+        let mut optimized = vec![];
+        //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
+        //ToDo optimize [IncVal(5), DecVal(4)] -> [IncVal(1)]
+        //ToDo optimize [IncVal(5), DecVal(5)] -> ()
+        //ToDo optimize [IncPtr(5), DecPtr(6)] -> [DecPtr(1)]
+        //ToDo optimize [IncPtr(6), DecPtr(5)] -> [IncPtr(1)]
+        //ToDo optimize [IncPtr(5), DecPtr(5)] -> ()
+        //ToDo optimize []                     -> ()
 
         optimized
+    }
+}
+
+impl Optimizer for ConcatOptimizer {
+    fn optimize(expressions: &[Expression]) -> Vec<Expression> {
+        let expressions = ConcatOptimizer::optimize_state_01(expressions);
+        let expressions = ConcatOptimizer::optimize_stage_02(&expressions);
+        expressions
     }
 }
 
