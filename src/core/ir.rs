@@ -36,10 +36,14 @@ fn replace_last<T>(vec: &mut Vec<T>, expression: T) {
     vec.push(expression);
 }
 
-pub struct Optimizers;
+trait Optimizer {
+    fn optimize(expressions: &[Expression]) -> Vec<Expression>;
+}
 
-impl Optimizers {
-    pub fn optimize(expressions: &[Expression]) -> Vec<Expression> {
+struct ConcatOptimizer;
+
+impl Optimizer for ConcatOptimizer {
+    fn optimize(expressions: &[Expression]) -> Vec<Expression> {
         let mut optimized = vec![];
 
         //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
