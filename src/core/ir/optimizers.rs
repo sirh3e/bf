@@ -1,5 +1,4 @@
 use crate::core::ir::{optimizers, Expression};
-use std::char::MAX;
 
 fn replace_last<T>(vec: &mut Vec<T>, expression: T) {
     vec.pop();
