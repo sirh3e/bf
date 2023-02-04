@@ -71,19 +71,18 @@ pub struct Vm {
     opcodes: Vec<Opcode>,
     index: usize,
     pointer: usize,
-    memory: [u8; 30000],
+    memory: [u8; 3_000_000],
 }
 
 impl Vm {
     pub fn from(opcodes: &[Opcode]) -> Self {
         Self {
-            pointer: 0,
+            pointer: 10_000,
             index: 0,
             opcodes: opcodes.to_vec(),
-            memory: [0; 30_000],
+            memory: [0; 3_000_000],
         }
     }
-
     pub fn run(&mut self) {
         while let Some(_) = self.step() {}
 
@@ -91,8 +90,13 @@ impl Vm {
     }
 
     pub fn step(&mut self) -> Option<()> {
-        //println!("{:?} {:?} {:?}", self.index, self.pointer, self.opcodes.get(self.index));
-        //println!("{:?}", &self.memory[..32]);
+        println!(
+            "{:?} {:?} {:?}",
+            self.index,
+            self.pointer,
+            self.opcodes.get(self.index)
+        );
+        println!("{:?}", &self.memory[10000..10032]);
 
         match self.opcodes.get(self.index) {
             None => return None,
@@ -114,10 +118,31 @@ impl Vm {
                     self.index += 1;
                 }
                 Opcode::MulVal(offset, val) => {
-                    let offset = self
-                        .pointer
-                        .checked_add_signed(*offset)
-                        .expect(&format!("Pointer: {:?} Offset: {:?}", self.pointer, offset));
+                    //println!("{:?}", offset);
+                    let option = self.pointer.checked_add_signed(*offset);
+
+                    /*
+                    if let None = option {
+                        self.index += 1;
+                        return Some(());
+                    }
+                    */
+
+                    let offset = match option {
+                        Some(offset) => offset,
+                        None => {
+                            panic!(
+                                "{}",
+                                &format!(
+                                    "Index: {:?}, Pointer: {:?}, Val: {:?}, Offset: {:?}, Option: {:?}",
+                                    self.index, self.pointer,
+                                    val,
+                                    offset,
+                                    option
+                                )
+                            );
+                        }
+                    };
 
                     self.memory[offset] = self.memory[offset]
                         .wrapping_add(self.memory[self.pointer].wrapping_mul(*val));
