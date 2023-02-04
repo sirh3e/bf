@@ -152,6 +152,7 @@ struct CopyOptimizerContext {
     inc_vals: Vec<u8>,
     dec_ptrs: Vec<usize>,
     inc_ptrs: Vec<usize>,
+    off_ptrs: Vec<isize>,
 }
 
 impl CopyOptimizerContext {
@@ -163,6 +164,7 @@ impl CopyOptimizerContext {
             inc_vals: vec![],
             dec_ptrs: vec![],
             inc_ptrs: vec![],
+            off_ptrs: vec![],
         }
     }
 
@@ -176,10 +178,12 @@ impl CopyOptimizerContext {
 
     pub fn add_dec_ptrs(&mut self, offset: usize) {
         self.dec_ptrs.push(offset);
+        self.off_ptrs.push(-(offset as isize));
     }
 
     pub fn add_inc_ptrs(&mut self, offset: usize) {
         self.inc_ptrs.push(offset);
+        self.off_ptrs.push(offset as isize);
     }
 
     pub fn set_side_effect(&mut self, is_side_effect: bool) {
@@ -206,6 +210,16 @@ impl CopyOptimizerContext {
         let mut total_inc_offset = 0;
         let mut expressions = vec![];
 
+        println!("offset pointers: {:?}", self.off_ptrs);
+
+        for (offset, val) in self.off_ptrs.iter().zip(&self.inc_vals) {
+            total_inc_offset += offset;
+            expressions.push(Expression::MulVal(total_inc_offset, *val));
+        }
+        expressions.push(Expression::Clear);
+        Some(expressions)
+
+        /*
         for (delta_inc_offset, val) in self.inc_ptrs.iter().zip(&self.inc_vals) {
 
             println!("{:?} {:?}", total_inc_offset, delta_inc_offset);
@@ -223,6 +237,7 @@ impl CopyOptimizerContext {
         }
         expressions.push(Expression::Clear);
         Some(expressions)
+         */
     }
 }
 
@@ -303,12 +318,13 @@ pub struct Optimizers;
 
 impl Optimizers {
     pub fn optimize(expressions: &[Expression]) -> Vec<Expression> {
-        //println!("{:?}", expressions);
+        println!("Unoptimized: {:?}", expressions);
         let expressions = ConcatOptimizer::optimize(expressions);
-        println!("{:?}", expressions);
+        //println!("{:?}", expressions);
         let expressions = CopyOptimizer::optimize(&expressions);
         //println!("{:?}", expressions);
         //let expressions = ClearOptimizer::optimize(&expressions);
+        println!("Optimized: {:?}", expressions);
         Vec::from(expressions)
     }
 }

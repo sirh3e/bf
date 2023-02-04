@@ -18,6 +18,7 @@ name = "vm"
 path = "bin/vm.rs"
 
 [dependencies]
+clap = {version = "4.1.*", features = ["unstable-doc"]}
 
 [dev-dependencies]
 test-case = "2.2.2"

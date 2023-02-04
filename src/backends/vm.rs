@@ -60,7 +60,7 @@ pub enum Opcode {
     IncVal(u8),
     DecPtr(usize),
     IncPtr(usize),
-    MulVal(usize, u8),
+    MulVal(isize, u8),
     Copy(usize),
     Clear,
     StartLoop(usize),
@@ -89,13 +89,13 @@ impl Vm {
     pub fn run(&mut self) {
         while let Some(_) = self.step() {}
 
-        print!("{:?}", &self.memory[..32]);
+        //print!("{:?}", &self.memory[..32]);
     }
 
     pub fn step(&mut self) -> Option<()> {
 
-        println!("{:?} {:?} {:?}", self.index, self.pointer, self.opcodes.get(self.index));
-        println!("{:?}", &self.memory[..32]);
+        //println!("{:?} {:?} {:?}", self.index, self.pointer, self.opcodes.get(self.index));
+        //println!("{:?}", &self.memory[..32]);
 
         match self.opcodes.get(self.index) {
             None => return None,
@@ -117,24 +117,27 @@ impl Vm {
                     self.index += 1;
                 }
                 Opcode::MulVal(offset, val) => {
-                    self.memory[self.pointer + offset] = self.memory[self.pointer + offset].wrapping_add(self.memory[self.pointer].wrapping_mul(*val));
+
+                    let offset = self.pointer.checked_add_signed(*offset).expect(&format!("Pointer: {:?} Offset: {:?}", self.pointer, offset));
+
+                    self.memory[offset] = self.memory[offset].wrapping_add(self.memory[self.pointer].wrapping_mul(*val));
                     self.index += 1;
                 }
                 Opcode::Copy(offset) => {
 
-                    println!("self.pointer: {:?} offset: {:?} {:?}", self.pointer, offset, self.pointer + offset);
+                    //println!("self.pointer: {:?} offset: {:?} {:?}", self.pointer, offset, self.pointer + offset);
 
                     self.memory[self.pointer + offset] = self.memory[self.pointer + offset].wrapping_add(self.memory[self.pointer]);
 
-                    println!("after copy: {:?}", &self.memory[..32]);
+                    //println!("after copy: {:?}", &self.memory[..32]);
 
                     self.index += 1;
                 }
                 Opcode::Clear => {
-                    println!("before clear: {:?}", &self.memory[..32]);
+                    //println!("before clear: {:?}", &self.memory[..32]);
                     self.memory[self.pointer] = 0;
                     
-                    println!("after clear: {:?}", &self.memory[..32]);
+                    //println!("after clear: {:?}", &self.memory[..32]);
                     
                     self.index += 1;
                 }

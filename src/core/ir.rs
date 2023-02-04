@@ -8,7 +8,7 @@ pub enum Expression {
     DecVal(u8),
     IncPtr(usize),
     DecPtr(usize),
-    MulVal(usize, u8),
+    MulVal(isize, u8),
     Copy(usize),
     Clear,
     Loop(Vec<Expression>),
