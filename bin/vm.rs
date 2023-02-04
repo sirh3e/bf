@@ -5,7 +5,7 @@ use std::{
 
 use bf::{
     backends::vm::{Interpreter, Vm},
-    core::pipeline::Pipeline
+    core::pipeline::Pipeline,
 };
 
 use clap::Parser;

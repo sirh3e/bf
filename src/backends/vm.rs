@@ -37,15 +37,13 @@ impl Interpreter {
                     opcodes.push(Opcode::Print);
                 }
                 Expression::Input => todo!(),
-                Expression::Copy(offset) =>  {
+                Expression::Copy(offset) => {
                     opcodes.push(Opcode::Copy(*offset));
                 }
                 Expression::Clear => {
                     opcodes.push(Opcode::Clear);
                 }
-                Expression::MulVal(offset, val) => {
-                    opcodes.push(Opcode::MulVal(*offset, *val))
-                }
+                Expression::MulVal(offset, val) => opcodes.push(Opcode::MulVal(*offset, *val)),
                 _ => todo!(),
             };
         }
@@ -93,7 +91,6 @@ impl Vm {
     }
 
     pub fn step(&mut self) -> Option<()> {
-
         //println!("{:?} {:?} {:?}", self.index, self.pointer, self.opcodes.get(self.index));
         //println!("{:?}", &self.memory[..32]);
 
@@ -117,17 +114,20 @@ impl Vm {
                     self.index += 1;
                 }
                 Opcode::MulVal(offset, val) => {
+                    let offset = self
+                        .pointer
+                        .checked_add_signed(*offset)
+                        .expect(&format!("Pointer: {:?} Offset: {:?}", self.pointer, offset));
 
-                    let offset = self.pointer.checked_add_signed(*offset).expect(&format!("Pointer: {:?} Offset: {:?}", self.pointer, offset));
-
-                    self.memory[offset] = self.memory[offset].wrapping_add(self.memory[self.pointer].wrapping_mul(*val));
+                    self.memory[offset] = self.memory[offset]
+                        .wrapping_add(self.memory[self.pointer].wrapping_mul(*val));
                     self.index += 1;
                 }
                 Opcode::Copy(offset) => {
-
                     //println!("self.pointer: {:?} offset: {:?} {:?}", self.pointer, offset, self.pointer + offset);
 
-                    self.memory[self.pointer + offset] = self.memory[self.pointer + offset].wrapping_add(self.memory[self.pointer]);
+                    self.memory[self.pointer + offset] =
+                        self.memory[self.pointer + offset].wrapping_add(self.memory[self.pointer]);
 
                     //println!("after copy: {:?}", &self.memory[..32]);
 
@@ -136,9 +136,9 @@ impl Vm {
                 Opcode::Clear => {
                     //println!("before clear: {:?}", &self.memory[..32]);
                     self.memory[self.pointer] = 0;
-                    
+
                     //println!("after clear: {:?}", &self.memory[..32]);
-                    
+
                     self.index += 1;
                 }
                 &Opcode::StartLoop(index) => {

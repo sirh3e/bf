@@ -196,9 +196,13 @@ impl CopyOptimizerContext {
         let dec_ptrs_sum = self.dec_ptrs.iter().sum::<usize>();
         let inc_ptrs_sum = self.inc_ptrs.iter().sum::<usize>();
 
-        match (self.has_side_effect, dec_ptrs_sum == inc_ptrs_sum, self.dec_vals.get(0)) {
+        match (
+            self.has_side_effect,
+            dec_ptrs_sum == inc_ptrs_sum,
+            self.dec_vals.get(0),
+        ) {
             (false, true, Some(1)) => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -225,7 +229,7 @@ impl CopyOptimizerContext {
             println!("{:?} {:?}", total_inc_offset, delta_inc_offset);
 
             total_inc_offset += delta_inc_offset;
-            
+
             println!("{:?}", total_inc_offset);
 
             let expression = match val {
@@ -300,7 +304,7 @@ impl Optimizer for CopyOptimizer {
 
                     if let Some(expressions) = context.generate_expressions() {
                         optimized.extend(expressions);
-                    }else {
+                    } else {
                         optimized.push(Expression::Loop(loop_optimized))
                     }
                 }
