@@ -29,6 +29,12 @@ typedef unsigned long long usize;
 #define INC_PTR_BY(amount) \\
     POINTER += amount
 
+#define CLEAR \\
+    MEMORY[POINTER] = 0
+
+#define MUL_VAL_BY(offset, amount) \\
+    MEMORY[POINTER + offset] += MEMORY[POINTER] * amount
+
 #define LOOP(expressions)         \\
     while(MEMORY[POINTER] != 0) { \\
         expressions               \\
@@ -92,15 +98,15 @@ impl Transpiler {
                 }
 
                 Expression::Clear => {
-                    todo!()
+                    buffer.push_str(&format!("CLEAR"));
                 }
 
                 Expression::Copy(_) => {
                     todo!()
                 }
 
-                Expression::MulVal(_, _) => {
-                    todo!()
+                Expression::MulVal(offset, amount) => {
+                    buffer.push_str(&format!("MUL_VAL_BY({}, {})", offset, amount));
                 }
             }
 
