@@ -1,10 +1,11 @@
 use std::{
     fs::File,
     io::{Read, Write},
+    time::Instant,
 };
 
 use bf::{
-    backends::vm::{Interpreter, Vm},
+    backends::vm::{Interpreter, Opcodes, Vm},
     core::pipeline::Pipeline,
 };
 
@@ -29,7 +30,11 @@ fn main() -> std::io::Result<()> {
     let opcodes = Interpreter::interpret(&expressions);
     let mut vm = Vm::from(&opcodes);
 
+    let start = Instant::now();
     vm.run();
+    let duration = start.elapsed();
+
+    println!("{:?}", duration);
 
     Ok(())
 }

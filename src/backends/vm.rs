@@ -66,38 +66,74 @@ pub enum Opcode {
     Print,
 }
 
+pub struct Opcodes(pub Vec<Opcode>);
+
+impl Opcodes {
+    fn fmt_with_indent(
+        indent: &mut usize,
+        opcode: &Opcode,
+        f: &mut std::fmt::Formatter,
+    ) -> std::fmt::Result {
+        match opcode {
+            Opcode::EndLoop(_) => {
+                *indent -= 1;
+            }
+            _ => {}
+        }
+
+        for _ in 0..*indent {
+            write!(f, "\t")?;
+        }
+
+        match opcode {
+            Opcode::StartLoop(_) => {
+                *indent += 1;
+            }
+            _ => {}
+        }
+
+        write!(f, " {}", &format!("{:?}\n", opcode))
+    }
+}
+
+impl std::fmt::Display for Opcodes {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let mut index = 0;
+        let mut indent: usize = 0;
+
+        for opcode in &self.0 {
+            write!(f, "{:0>5}", index)?;
+            index += 1;
+
+            Opcodes::fmt_with_indent(&mut indent, opcode, f)?;
+        }
+
+        write!(f, "")
+    }
+}
+
 #[derive(Debug)]
 pub struct Vm {
-    opcodes: Vec<Opcode>,
+    pub opcodes: Vec<Opcode>,
     index: usize,
     pointer: usize,
-    memory: [u8; 3_000_000],
+    memory: [u8; 30_000],
 }
 
 impl Vm {
     pub fn from(opcodes: &[Opcode]) -> Self {
         Self {
-            pointer: 10_000,
+            pointer: 100,
             index: 0,
             opcodes: opcodes.to_vec(),
-            memory: [0; 3_000_000],
+            memory: [0; 30_000],
         }
     }
     pub fn run(&mut self) {
         while let Some(_) = self.step() {}
-
-        //print!("{:?}", &self.memory[..32]);
     }
 
     pub fn step(&mut self) -> Option<()> {
-        println!(
-            "{:?} {:?} {:?}",
-            self.index,
-            self.pointer,
-            self.opcodes.get(self.index)
-        );
-        println!("{:?}", &self.memory[10000..10032]);
-
         match self.opcodes.get(self.index) {
             None => return None,
             Some(opcode) => match opcode {
@@ -118,51 +154,20 @@ impl Vm {
                     self.index += 1;
                 }
                 Opcode::MulVal(offset, val) => {
-                    //println!("{:?}", offset);
-                    let option = self.pointer.checked_add_signed(*offset);
-
-                    /*
-                    if let None = option {
-                        self.index += 1;
-                        return Some(());
-                    }
-                    */
-
-                    let offset = match option {
-                        Some(offset) => offset,
-                        None => {
-                            panic!(
-                                "{}",
-                                &format!(
-                                    "Index: {:?}, Pointer: {:?}, Val: {:?}, Offset: {:?}, Option: {:?}",
-                                    self.index, self.pointer,
-                                    val,
-                                    offset,
-                                    option
-                                )
-                            );
-                        }
-                    };
+                    let offset = self.pointer.checked_add_signed(*offset)?;
 
                     self.memory[offset] = self.memory[offset]
                         .wrapping_add(self.memory[self.pointer].wrapping_mul(*val));
                     self.index += 1;
                 }
                 Opcode::Copy(offset) => {
-                    //println!("self.pointer: {:?} offset: {:?} {:?}", self.pointer, offset, self.pointer + offset);
-
                     self.memory[self.pointer + offset] =
                         self.memory[self.pointer + offset].wrapping_add(self.memory[self.pointer]);
-
-                    //println!("after copy: {:?}", &self.memory[..32]);
 
                     self.index += 1;
                 }
                 Opcode::Clear => {
-                    //println!("before clear: {:?}", &self.memory[..32]);
                     self.memory[self.pointer] = 0;
-
-                    //println!("after clear: {:?}", &self.memory[..32]);
 
                     self.index += 1;
                 }
