@@ -23,7 +23,15 @@ impl Optimizer for ClearOptimizer {
                     [Expression::DecVal(1)] | [Expression::IncVal(1)] => {
                         optimized.push(Expression::Clear)
                     }
-                    _ => optimized.push(expression.clone()),
+                    _ => {
+                        let mut sub_optimized = vec![];
+                        let sub_expressions = ClearOptimizer::optimize(expressions);
+                        sub_optimized.extend(sub_expressions);
+
+                        if sub_optimized.len() > 0 {
+                            optimized.push(Expression::Loop(sub_optimized));
+                        }
+                    },
                 },
                 _ => {
                     optimized.push(expression.clone());
@@ -325,9 +333,9 @@ impl Optimizers {
         println!("Unoptimized: {:?}", expressions);
         let expressions = ConcatOptimizer::optimize(expressions);
         //println!("{:?}", expressions);
-        let expressions = CopyOptimizer::optimize(&expressions);
+        //let expressions = CopyOptimizer::optimize(&expressions);
         //println!("{:?}", expressions);
-        //let expressions = ClearOptimizer::optimize(&expressions);
+        let expressions = ClearOptimizer::optimize(&expressions);
         println!("Optimized: {:?}", expressions);
         Vec::from(expressions)
     }
