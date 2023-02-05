@@ -18,6 +18,14 @@ macro_rules! dec_val_by {
     };
 }
 
+macro_rules! mul_val_by {
+    ($memory:expr, $index:expr, $offset:expr, $amount:expr) => {
+        let offset = $index.checked_add_signed($offset).unwrap();
+
+        $memory[offset] = $memory[offset].wrapping_add($memory[$index].wrapping_mul($amount));
+    };
+}
+
 macro_rules! inc_ptr_by {
     ($pointer:expr, $amount:expr) => {
         $pointer += $amount
@@ -38,6 +46,12 @@ macro_rules! r#loop {
          )*
         }
      };
+}
+
+macro_rules! clear {
+    ($memory:expr, $index:expr) => {
+		$memory[$index] = 0;
+    };
 }
 
 macro_rules! output {
@@ -100,9 +114,16 @@ impl Transpiler {
                     buffer.push_str(&format!("output!({}, {})", MEMORY, POINTER));
                 }
                 Expression::Input => {}
-                Expression::Clear => todo!(),
+                Expression::Clear => {
+                    buffer.push_str(&format!("clear!({}, {})", MEMORY, POINTER));
+                }
                 Expression::Copy(_) => todo!(),
-                Expression::MulVal(_, _) => todo!(),
+                Expression::MulVal(offset, amount) => {
+                    buffer.push_str(&format!(
+                        "mul_val_by!({}, {}, {}, {})",
+                        MEMORY, POINTER, offset, amount
+                    ));
+                }
             }
 
             let text = match depth {
