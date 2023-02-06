@@ -44,7 +44,6 @@ impl Interpreter {
                     opcodes.push(Opcode::Clear);
                 }
                 Expression::MulVal(offset, val) => opcodes.push(Opcode::MulVal(*offset, *val)),
-                _ => todo!(),
             };
         }
 
