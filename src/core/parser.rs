@@ -1,5 +1,3 @@
-use std::ops::Index;
-
 use crate::core::{ir::Expression, token::Token};
 
 pub struct Parser;
@@ -9,7 +7,7 @@ impl Parser {
         let mut expressions = vec![];
         let mut indexes: Vec<usize> = vec![];
 
-        for token in tokens.into_iter().filter(Self::filter) {
+        for token in tokens.iter().filter(Self::filter) {
             match token {
                 Token::Plus => {
                     expressions.push(Expression::IncVal(1));
@@ -46,9 +44,6 @@ impl Parser {
     }
 
     fn filter(token: &&Token) -> bool {
-        match &token {
-            Token::Whitespace => false,
-            _ => true,
-        }
+        !matches!(token, Token::Whitespace)
     }
 }

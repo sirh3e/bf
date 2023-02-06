@@ -1,9 +1,9 @@
 use crate::core::ir::Expression;
 
-const MEMORY: &'static str = "MEMORY";
-const POINTER: &'static str = "POINTER";
+const MEMORY: &str = "MEMORY";
+const POINTER: &str = "POINTER";
 
-const RUNTIME: &'static str = "#include <stdio.h>
+const RUNTIME: &str = "#include <stdio.h>
 
 typedef unsigned char byte;
 typedef unsigned long long usize;
@@ -28,6 +28,12 @@ typedef unsigned long long usize;
 
 #define INC_PTR_BY(amount) \\
     POINTER += amount
+
+#define CLEAR \\
+    MEMORY[POINTER] = 0
+
+#define MUL_VAL_BY(offset, amount) \\
+    MEMORY[POINTER + offset] += MEMORY[POINTER] * amount
 
 #define LOOP(expressions)         \\
     while(MEMORY[POINTER] != 0) { \\
@@ -64,30 +70,40 @@ impl Transpiler {
 
             match expression {
                 Expression::IncVal(amount) => {
-                    buffer.push_str(&format!("INC_VAL_BY({})", amount));
+                    buffer.push_str(&format!("INC_VAL_BY({amount})"));
                 }
                 Expression::DecVal(amount) => {
-                    buffer.push_str(&format!("DEC_VAL_BY({})", amount));
+                    buffer.push_str(&format!("DEC_VAL_BY({amount})"));
                 }
                 Expression::IncPtr(amount) => {
-                    buffer.push_str(&format!("INC_PTR_BY({})", amount));
+                    buffer.push_str(&format!("INC_PTR_BY({amount})"));
                 }
                 Expression::DecPtr(amount) => {
-                    buffer.push_str(&format!("DEC_PTR_BY({})", amount));
+                    buffer.push_str(&format!("DEC_PTR_BY({amount})"));
                 }
                 Expression::Loop(expression) => {
-                    buffer.push_str(&format!("LOOP(\n"));
-                    buffer.push_str(&Self::do_transpile(depth + 1, &expression));
+                    buffer.push_str("LOOP(\n");
+                    buffer.push_str(&Self::do_transpile(depth + 1, expression));
 
                     for _ in 0..depth {
-                        buffer.push_str("\t");
+                        buffer.push('\t');
                     }
-                    buffer.push_str(")");
+                    buffer.push(')');
                 }
                 Expression::Output => {
-                    buffer.push_str(&format!("OUTPUT"));
+                    buffer.push_str("OUTPUT");
                 }
-                Expression::Input => {}
+                Expression::Input => {
+                    todo!()
+                }
+
+                Expression::Clear => {
+                    buffer.push_str("CLEAR");
+                }
+
+                Expression::MulVal(offset, amount) => {
+                    buffer.push_str(&format!("MUL_VAL_BY({offset}, {amount})"));
+                }
             }
 
             buffer.push_str(";\n");
