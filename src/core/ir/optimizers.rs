@@ -214,26 +214,6 @@ impl CopyOptimizerContext {
         }
         expressions.push(Expression::Clear);
         Some(expressions)
-
-        /*
-        for (delta_inc_offset, val) in self.inc_ptrs.iter().zip(&self.inc_vals) {
-
-            println!("{:?} {:?}", total_inc_offset, delta_inc_offset);
-
-            total_inc_offset += delta_inc_offset;
-
-            println!("{:?}", total_inc_offset);
-
-            let expression = match val {
-                1 => Expression::Copy(total_inc_offset),
-                _ => Expression::MulVal(total_inc_offset, *val)
-            };
-
-            expressions.push(expression);
-        }
-        expressions.push(Expression::Clear);
-        Some(expressions)
-         */
     }
 }
 
