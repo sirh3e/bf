@@ -87,48 +87,64 @@ impl ConcatOptimizer {
                     replace_last(&mut optimized, Expression::IncVal(amount + val))
                 }
                 (Expression::IncVal(val), Some(&Expression::DecVal(amount))) => {
-                    if val < &amount {
-                        let expression = Expression::DecVal(amount - val);
-                        replace_last(&mut optimized, expression);
-                    } else if &amount < val {
-                        let expression = Expression::IncVal(val - amount);
-                        replace_last(&mut optimized, expression);
+                    match (val < &amount, &amount < val) {
+                        (true, _) => {
+                            let expression = Expression::DecVal(amount - val);
+                            replace_last(&mut optimized, expression);
+                        }
+                        (_, true) => {
+                            let expression = Expression::IncVal(val - amount);
+                            replace_last(&mut optimized, expression);
+                        }
+                        _ => {}
                     }
                 }
                 (Expression::DecVal(val), Some(&Expression::DecVal(amount))) => {
                     replace_last(&mut optimized, Expression::DecVal(amount + val))
                 }
                 (Expression::DecVal(val), Some(&Expression::IncVal(amount))) => {
-                    if val < &amount {
-                        let expression = Expression::IncVal(amount - val);
-                        replace_last(&mut optimized, expression);
-                    } else if &amount < val {
-                        let expression = Expression::DecVal(val - amount);
-                        replace_last(&mut optimized, expression);
+                    match (val < &amount, &amount < val) {
+                        (true, _) => {
+                            let expression = Expression::IncVal(amount - val);
+                            replace_last(&mut optimized, expression);
+                        }
+                        (_, true) => {
+                            let expression = Expression::DecVal(val - amount);
+                            replace_last(&mut optimized, expression);
+                        }
+                        _ => {}
                     }
                 }
                 (Expression::IncPtr(val), Some(&Expression::IncPtr(amount))) => {
                     replace_last(&mut optimized, Expression::IncPtr(amount + val))
                 }
                 (Expression::IncPtr(val), Some(&Expression::DecPtr(amount))) => {
-                    if val < &amount {
-                        let expression = Expression::DecPtr(amount - val);
-                        replace_last(&mut optimized, expression);
-                    } else if &amount < val {
-                        let expression = Expression::IncPtr(val - amount);
-                        replace_last(&mut optimized, expression);
+                    match (val < &amount, &amount < val) {
+                        (true, _) => {
+                            let expression = Expression::DecPtr(amount - val);
+                            replace_last(&mut optimized, expression);
+                        }
+                        (_, true) => {
+                            let expression = Expression::IncPtr(val - amount);
+                            replace_last(&mut optimized, expression);
+                        }
+                        _ => {}
                     }
                 }
                 (Expression::DecPtr(val), Some(&Expression::DecPtr(amount))) => {
                     replace_last(&mut optimized, Expression::DecPtr(amount + val))
                 }
                 (Expression::DecPtr(val), Some(&Expression::IncPtr(amount))) => {
-                    if val < &amount {
-                        let expression = Expression::IncPtr(amount - val);
-                        replace_last(&mut optimized, expression);
-                    } else if &amount < val {
-                        let expression = Expression::DecPtr(val - amount);
-                        replace_last(&mut optimized, expression);
+                    match (val < &amount, &amount < val) {
+                        (true, _) => {
+                            let expression = Expression::IncPtr(amount - val);
+                            replace_last(&mut optimized, expression);
+                        }
+                        (_, true) => {
+                            let expression = Expression::DecPtr(val - amount);
+                            replace_last(&mut optimized, expression);
+                        }
+                        _ => {}
                     }
                 }
                 (Expression::Loop(expressions), _) => {
