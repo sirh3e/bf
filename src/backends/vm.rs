@@ -74,22 +74,16 @@ impl Opcodes {
         opcode: &Opcode,
         f: &mut std::fmt::Formatter,
     ) -> std::fmt::Result {
-        match opcode {
-            Opcode::EndLoop(_) => {
-                *indent -= 1;
-            }
-            _ => {}
+        if let Opcode::EndLoop(_) = opcode {
+            *indent -= 1;
         }
 
         for _ in 0..*indent {
             write!(f, "\t")?;
         }
 
-        match opcode {
-            Opcode::StartLoop(_) => {
-                *indent += 1;
-            }
-            _ => {}
+        if let Opcode::StartLoop(_) = opcode {
+            *indent += 1;
         }
 
         write!(f, " {}", &format!("{opcode:?}\n"))
