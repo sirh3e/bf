@@ -187,15 +187,15 @@ impl CopyOptimizerContext {
         let dec_ptrs_sum = self.dec_ptrs.iter().sum::<usize>();
         let inc_ptrs_sum = self.inc_ptrs.iter().sum::<usize>();
 
-        match (
-            self.has_side_effect,
-            dec_ptrs_sum == inc_ptrs_sum,
-            self.dec_vals.len() == 1,
-            self.dec_vals.first(),
-        ) {
-            (false, true, true, Some(1)) => true,
-            _ => false,
-        }
+        matches!(
+            (
+                self.has_side_effect,
+                dec_ptrs_sum == inc_ptrs_sum,
+                self.dec_vals.len() == 1,
+                self.dec_vals.first()
+            ),
+            (false, true, true, Some(1))
+        )
     }
 
     pub fn generate_expressions(&self) -> Option<Vec<Expression>> {
