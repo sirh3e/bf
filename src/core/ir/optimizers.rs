@@ -301,7 +301,7 @@ mod test {
     use pretty_assertions::assert_eq;
     use test_case::test_case;
 
-    #[test_case(vec![Expression::Loop(vec![Expression::DecVal(1), Expression::IncPtr(1), Expression::IncVal(1), Expression::DecPtr(1)])], vec![Expression::Copy(1), Expression::Clear])]
+    #[test_case(vec![Expression::Loop(vec![Expression::DecVal(1), Expression::IncPtr(1), Expression::IncVal(1), Expression::DecPtr(1)])], vec![Expression::MulVal(1, 1), Expression::Clear])]
     fn copy_optimizer(input: Vec<Expression>, excepted: Vec<Expression>) {
         let actual = CopyOptimizer::optimize(&input);
         assert_eq!(actual, excepted);
