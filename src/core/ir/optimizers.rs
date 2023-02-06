@@ -317,7 +317,7 @@ mod test {
 
     macro_rules! test_loop {
         ($expressions:expr) => {
-            &vec![Expression::Loop($expressions)]
+            &[Expression::Loop($expressions)]
         };
     }
 
