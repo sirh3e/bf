@@ -44,9 +44,6 @@ impl Parser {
     }
 
     fn filter(token: &&Token) -> bool {
-        match &token {
-            Token::Whitespace => false,
-            _ => true,
-        }
+        !matches!(token, Token::Whitespace)
     }
 }
