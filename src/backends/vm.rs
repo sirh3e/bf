@@ -92,12 +92,10 @@ impl Opcodes {
 
 impl std::fmt::Display for Opcodes {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let mut index = 0;
         let mut indent: usize = 0;
 
-        for opcode in &self.0 {
+        for (index, opcode) in self.0.iter().enumerate() {
             write!(f, "{index:0>5}")?;
-            index += 1;
 
             Opcodes::fmt_with_indent(&mut indent, opcode, f)?;
         }
