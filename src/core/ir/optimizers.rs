@@ -135,7 +135,7 @@ impl Optimizer for ConcatOptimizer {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct CopyOptimizerContext {
     start_position: usize,
     has_side_effect: bool,
