@@ -1,7 +1,5 @@
 pub mod optimizers;
 
-use std::fmt::{write, Display, Formatter};
-
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub enum Expression {
     IncVal(u8),

@@ -8,10 +8,9 @@ pub struct Pipeline;
 
 impl Pipeline {
     pub fn execute(text: &str) -> Vec<Expression> {
-        let tokens = Tokenizer::tokenize(&text);
+        let tokens = Tokenizer::tokenize(text);
         let expressions = Parser::parse(&tokens);
-        let expressions = Optimizers::optimize(&expressions);
 
-        expressions
+        Optimizers::optimize(&expressions)
     }
 }

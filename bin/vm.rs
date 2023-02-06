@@ -1,11 +1,7 @@
-use std::{
-    fs::File,
-    io::{Read, Write},
-    time::Instant,
-};
+use std::{fs::File, io::Read, time::Instant};
 
 use bf::{
-    backends::vm::{Interpreter, Opcodes, Vm},
+    backends::vm::{Interpreter, Vm},
     core::pipeline::Pipeline,
 };
 
@@ -34,7 +30,7 @@ fn main() -> std::io::Result<()> {
     vm.run();
     let duration = start.elapsed();
 
-    println!("{:?}", duration);
+    println!("{duration:?}");
 
     Ok(())
 }

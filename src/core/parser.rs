@@ -7,7 +7,7 @@ impl Parser {
         let mut expressions = vec![];
         let mut indexes: Vec<usize> = vec![];
 
-        for token in tokens.into_iter().filter(Self::filter) {
+        for token in tokens.iter().filter(Self::filter) {
             match token {
                 Token::Plus => {
                     expressions.push(Expression::IncVal(1));

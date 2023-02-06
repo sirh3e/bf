@@ -28,7 +28,7 @@ impl Optimizer for ClearOptimizer {
                         let sub_expressions = ClearOptimizer::optimize(expressions);
                         sub_optimized.extend(sub_expressions);
 
-                        if sub_optimized.len() > 0 {
+                        if !sub_optimized.is_empty() {
                             optimized.push(Expression::Loop(sub_optimized));
                         }
                     }
@@ -62,7 +62,7 @@ impl ConcatOptimizer {
                     replace_last(&mut optimized, Expression::DecPtr(amount + 1))
                 }
                 (Expression::Loop(expressions), _) => {
-                    optimized.push(Expression::Loop(Self::optimize_stage_01(&expressions)))
+                    optimized.push(Expression::Loop(Self::optimize_stage_01(expressions)))
                 }
                 (expression, _) => optimized.push(expression.clone()),
             }
@@ -71,7 +71,7 @@ impl ConcatOptimizer {
     }
 
     fn optimize_stage_02(expressions: &[Expression]) -> Vec<Expression> {
-        let mut optimized: Vec<Expression> = vec![];
+        let _optimized: Vec<Expression> = vec![];
         //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
         //ToDo optimize [IncVal(5), DecVal(4)] -> [IncVal(1)]
         //ToDo optimize [IncVal(5), DecVal(5)] -> ()
@@ -132,8 +132,8 @@ impl ConcatOptimizer {
                     }
                 }
                 (Expression::Loop(expressions), _) => {
-                    let sub_expressions = Self::optimize_stage_02(&expressions);
-                    if sub_expressions.len() > 0 {
+                    let sub_expressions = Self::optimize_stage_02(expressions);
+                    if !sub_expressions.is_empty() {
                         optimized.push(Expression::Loop(Self::optimize_stage_02(&sub_expressions)))
                     }
                 }
@@ -147,8 +147,8 @@ impl ConcatOptimizer {
 impl Optimizer for ConcatOptimizer {
     fn optimize(expressions: &[Expression]) -> Vec<Expression> {
         let expressions = ConcatOptimizer::optimize_stage_01(expressions);
-        let expressions = ConcatOptimizer::optimize_stage_02(&expressions);
-        expressions
+
+        ConcatOptimizer::optimize_stage_02(&expressions)
     }
 }
 
@@ -208,7 +208,7 @@ impl CopyOptimizerContext {
             self.has_side_effect,
             dec_ptrs_sum == inc_ptrs_sum,
             self.dec_vals.len() == 1,
-            self.dec_vals.get(0),
+            self.dec_vals.first(),
         ) {
             (false, true, true, Some(1)) => true,
             _ => false,
@@ -297,9 +297,8 @@ impl Optimizer for CopyOptimizer {
                                 context.add_dec_ptrs(*val);
                             }
                             Expression::Loop(r#loop) => {
-                                loop_optimized.extend(Self::optimize(&vec![Expression::Loop(
-                                    r#loop.clone(),
-                                )]));
+                                loop_optimized
+                                    .extend(Self::optimize(&[Expression::Loop(r#loop.clone())]));
                                 context.set_side_effect(true);
                             }
                             Expression::Output => {
@@ -335,9 +334,8 @@ impl Optimizers {
     pub fn optimize(expressions: &[Expression]) -> Vec<Expression> {
         let expressions = ConcatOptimizer::optimize(expressions);
         let expressions = CopyOptimizer::optimize(&expressions);
-        let expressions = ClearOptimizer::optimize(&expressions);
 
-        Vec::from(expressions)
+        ClearOptimizer::optimize(&expressions)
     }
 }
 
@@ -362,7 +360,7 @@ mod test {
 
     macro_rules! test_expr {
         ($expressions:expr) => {
-            &vec![$expressions]
+            &[Expression::Clear]
         };
     }
 

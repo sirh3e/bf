@@ -1,5 +1,4 @@
 use std::{
-    env::current_dir,
     fs::File,
     io::{Read, Write},
 };
@@ -30,7 +29,7 @@ fn main() -> std::io::Result<()> {
     let code = Transpiler::transpile(&expressions);
 
     let mut file = File::create(args.output_file)?;
-    let _ = file.write_all(code.as_bytes())?;
+    file.write_all(code.as_bytes())?;
 
     Ok(())
 }

@@ -92,7 +92,7 @@ impl Opcodes {
             _ => {}
         }
 
-        write!(f, " {}", &format!("{:?}\n", opcode))
+        write!(f, " {}", &format!("{opcode:?}\n"))
     }
 }
 
@@ -102,7 +102,7 @@ impl std::fmt::Display for Opcodes {
         let mut indent: usize = 0;
 
         for opcode in &self.0 {
-            write!(f, "{:0>5}", index)?;
+            write!(f, "{index:0>5}")?;
             index += 1;
 
             Opcodes::fmt_with_indent(&mut indent, opcode, f)?;
@@ -130,7 +130,7 @@ impl Vm {
         }
     }
     pub fn run(&mut self) {
-        while let Some(_) = self.step() {}
+        while self.step().is_some() {}
     }
 
     pub fn step(&mut self) -> Option<()> {
