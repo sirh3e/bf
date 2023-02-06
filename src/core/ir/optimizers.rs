@@ -151,11 +151,7 @@ impl CopyOptimizerContext {
         Self {
             start_position,
             has_side_effect: false,
-            dec_vals: vec![],
-            inc_vals: vec![],
-            dec_ptrs: vec![],
-            inc_ptrs: vec![],
-            off_ptrs: vec![],
+            ..Default::default()
         }
     }
 
