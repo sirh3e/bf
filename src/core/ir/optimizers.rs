@@ -42,6 +42,22 @@ impl Optimizer for ClearOptimizer {
     }
 }
 
+macro_rules! concat_match {
+    ($optimized:expr, $lhs:expr, $lhs_ident:ident, $rhs:expr, $rhs_ident:ident) => {
+        match ($lhs < $rhs, $rhs < $lhs) {
+            (true, _) => {
+                let expression = Expression::$lhs_ident($rhs - $lhs);
+                replace_last(&mut $optimized, expression);
+            }
+            (_, true) => {
+                let expression = Expression::$rhs_ident($lhs - $rhs);
+                replace_last(&mut $optimized, expression);
+            }
+            _ => {}
+        }
+    };
+}
+
 struct ConcatOptimizer;
 
 impl ConcatOptimizer {
@@ -71,15 +87,6 @@ impl ConcatOptimizer {
     }
 
     fn optimize_stage_02(expressions: &[Expression]) -> Vec<Expression> {
-        let _optimized: Vec<Expression> = vec![];
-        //ToDo optimize [IncVal(5), DecVal(6)] -> [DecVal(1)]
-        //ToDo optimize [IncVal(5), DecVal(4)] -> [IncVal(1)]
-        //ToDo optimize [IncVal(5), DecVal(5)] -> ()
-        //ToDo optimize [IncPtr(5), DecPtr(6)] -> [DecPtr(1)]
-        //ToDo optimize [IncPtr(6), DecPtr(5)] -> [IncPtr(1)]
-        //ToDo optimize [IncPtr(5), DecPtr(5)] -> ()
-        //ToDo optimize []                     -> ()
-
         let mut optimized = vec![];
         for expression in expressions {
             match (expression, optimized.last()) {
@@ -87,65 +94,25 @@ impl ConcatOptimizer {
                     replace_last(&mut optimized, Expression::IncVal(amount + val))
                 }
                 (Expression::IncVal(val), Some(&Expression::DecVal(amount))) => {
-                    match (val < &amount, &amount < val) {
-                        (true, _) => {
-                            let expression = Expression::DecVal(amount - val);
-                            replace_last(&mut optimized, expression);
-                        }
-                        (_, true) => {
-                            let expression = Expression::IncVal(val - amount);
-                            replace_last(&mut optimized, expression);
-                        }
-                        _ => {}
-                    }
+                    concat_match!(optimized, val, DecVal, &amount, IncVal);
                 }
                 (Expression::DecVal(val), Some(&Expression::DecVal(amount))) => {
                     replace_last(&mut optimized, Expression::DecVal(amount + val))
                 }
                 (Expression::DecVal(val), Some(&Expression::IncVal(amount))) => {
-                    match (val < &amount, &amount < val) {
-                        (true, _) => {
-                            let expression = Expression::IncVal(amount - val);
-                            replace_last(&mut optimized, expression);
-                        }
-                        (_, true) => {
-                            let expression = Expression::DecVal(val - amount);
-                            replace_last(&mut optimized, expression);
-                        }
-                        _ => {}
-                    }
+                    concat_match!(optimized, val, IncVal, &amount, DecVal);
                 }
                 (Expression::IncPtr(val), Some(&Expression::IncPtr(amount))) => {
                     replace_last(&mut optimized, Expression::IncPtr(amount + val))
                 }
                 (Expression::IncPtr(val), Some(&Expression::DecPtr(amount))) => {
-                    match (val < &amount, &amount < val) {
-                        (true, _) => {
-                            let expression = Expression::DecPtr(amount - val);
-                            replace_last(&mut optimized, expression);
-                        }
-                        (_, true) => {
-                            let expression = Expression::IncPtr(val - amount);
-                            replace_last(&mut optimized, expression);
-                        }
-                        _ => {}
-                    }
+                    concat_match!(optimized, val, DecPtr, &amount, IncPtr);
                 }
                 (Expression::DecPtr(val), Some(&Expression::DecPtr(amount))) => {
                     replace_last(&mut optimized, Expression::DecPtr(amount + val))
                 }
                 (Expression::DecPtr(val), Some(&Expression::IncPtr(amount))) => {
-                    match (val < &amount, &amount < val) {
-                        (true, _) => {
-                            let expression = Expression::IncPtr(amount - val);
-                            replace_last(&mut optimized, expression);
-                        }
-                        (_, true) => {
-                            let expression = Expression::DecPtr(val - amount);
-                            replace_last(&mut optimized, expression);
-                        }
-                        _ => {}
-                    }
+                    concat_match!(optimized, val, IncPtr, &amount, DecPtr);
                 }
                 (Expression::Loop(expressions), _) => {
                     let sub_expressions = Self::optimize_stage_02(expressions);
