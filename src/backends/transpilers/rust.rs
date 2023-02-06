@@ -117,7 +117,6 @@ impl Transpiler {
                 Expression::Clear => {
                     buffer.push_str(&format!("clear!({MEMORY}, {POINTER})"));
                 }
-                Expression::Copy(_) => todo!(),
                 Expression::MulVal(offset, amount) => {
                     buffer.push_str(&format!(
                         "mul_val_by!({MEMORY}, {POINTER}, {offset}, {amount})"

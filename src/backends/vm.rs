@@ -37,9 +37,6 @@ impl Interpreter {
                     opcodes.push(Opcode::Print);
                 }
                 Expression::Input => todo!(),
-                Expression::Copy(offset) => {
-                    opcodes.push(Opcode::Copy(*offset));
-                }
                 Expression::Clear => {
                     opcodes.push(Opcode::Clear);
                 }

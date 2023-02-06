@@ -101,10 +101,6 @@ impl Transpiler {
                     buffer.push_str("CLEAR");
                 }
 
-                Expression::Copy(_) => {
-                    todo!()
-                }
-
                 Expression::MulVal(offset, amount) => {
                     buffer.push_str(&format!("MUL_VAL_BY({offset}, {amount})"));
                 }

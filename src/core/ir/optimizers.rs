@@ -231,10 +231,6 @@ impl Optimizer for CopyOptimizer {
                         CopyOptimizerContext::new(optimized.len().wrapping_sub(1) % usize::MAX);
                     for expression in r#loop {
                         match expression {
-                            Expression::Copy(_) => {
-                                loop_optimized.push(expression.clone());
-                                context.set_side_effect(true);
-                            }
                             Expression::Clear => {
                                 loop_optimized.push(expression.clone());
                                 context.set_side_effect(true);
