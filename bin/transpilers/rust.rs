@@ -1,6 +1,7 @@
 use std::{
     fs::File,
     io::{Read, Write},
+    path::{Path, PathBuf},
 };
 
 use bf::{backends::transpilers::rust::Transpiler, core::pipeline::Pipeline};
@@ -14,7 +15,7 @@ struct Args {
     program_file: String,
 
     #[arg(short, long)]
-    output_file: String,
+    output_directory: String,
 }
 
 fn main() -> std::io::Result<()> {
@@ -22,13 +23,19 @@ fn main() -> std::io::Result<()> {
     let args = Args::parse();
 
     let mut text = String::new();
-    let mut file = File::open(args.program_file)?;
+    let path = Path::new(&args.program_file);
+    let mut file = File::open(&args.program_file)?;
     let _ = file.read_to_string(&mut text)?;
 
     let expressions = Pipeline::execute(&text);
     let code = Transpiler::transpile(&expressions);
 
-    let mut file = File::create(args.output_file)?;
+    let mut path_buf = PathBuf::from(&args.output_directory);
+    path_buf.push(path.file_name().unwrap());
+    path_buf.set_extension("rs");
+
+    let output_file_path = path_buf.as_path();
+    let mut file = File::create(output_file_path)?;
     file.write_all(code.as_bytes())?;
 
     Ok(())
