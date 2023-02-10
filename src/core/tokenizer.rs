@@ -16,7 +16,7 @@ impl Tokenizer {
             '<' => Token::Shl,
             '[' => Token::OpenBracket,
             ']' => Token::CloseBracket,
-            _ => Token::Whitespace,
+            _ => Token::Whitespace(char),
         }
     }
 }

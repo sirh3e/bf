@@ -8,5 +8,5 @@ pub enum Token {
     Shl,
     OpenBracket,
     CloseBracket,
-    Whitespace,
+    Whitespace(char),
 }

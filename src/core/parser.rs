@@ -35,7 +35,7 @@ impl Parser {
                     let r#loop = expressions.split_off(start_index);
                     expressions.push(Expression::Loop(r#loop));
                 }
-                Token::Whitespace => {
+                Token::Whitespace(_) => {
                     unreachable!()
                 }
             }
@@ -44,6 +44,6 @@ impl Parser {
     }
 
     fn filter(token: &&Token) -> bool {
-        !matches!(token, Token::Whitespace)
+        !matches!(token, Token::Whitespace(_))
     }
 }
