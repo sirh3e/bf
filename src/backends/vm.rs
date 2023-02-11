@@ -1,3 +1,11 @@
+use std::collections::HashSet;
+use std::fmt::Debug;
+use std::hash::Hash;
+use std::num::Wrapping;
+use std::ops::Add;
+
+#[feature(wrapping_int_impl)]
+
 use crate::core::ir::Expression;
 
 pub struct Interpreter;
@@ -100,28 +108,110 @@ impl std::fmt::Display for Opcodes {
     }
 }
 
+const VM_MEMORY_LENGTH: usize = 30_000;
+
+//type VmCell = u8;
+//type VmMemory = [VmCell; VM_MEMORY_LENGTH];
+
+type VmCell<T> = std::num::Wrapping<T>;
+type VmPointer = usize;
+
 #[derive(Debug)]
+struct VmMemory<C : Debug + Default, const N: usize = 30_000>
+{
+    pointer: VmPointer,
+    cells: [VmCell<C>; N],
+}
+
+impl<C: Debug + Default, const N: usize> Default for VmMemory<C, N> {
+    fn default() -> Self {
+        let cells: [Wrapping<C>; N] = Default::default();
+        Self {
+            cells,
+            pointer: 0
+        }
+    }
+}
+
+
+impl<C: Debug + Default, const N: usize> VmMemory<C, N>
+{
+    fn add(&mut self, amount: C) {
+        let a = &self.cells[self.pointer];
+    }
+}
+
+type VmDefaultMemory = VmMemory<u8, 30_000>;
+
+//ToDo change that the memory can be any size maybe a vec?
+struct VmState {
+    index: usize,
+    pointer: usize,
+    memory: VmDefaultMemory,
+}
+
+/*
+impl VmState {
+    pub fn set_index(&self, index: usize) -> Self {
+        let mut other = self.clone();
+        other.index = index;
+
+        other
+    }
+
+    pub fn set_pointer(&self, pointer: usize) -> Self {
+        let mut other = self.clone();
+        other.pointer = pointer;
+
+        other
+    }
+
+    pub fn set_memory_by_index_value(&self, index: usize, cell: u8) -> Self {
+        todo!()
+    }
+}
+*/
+
+impl Default for VmState {
+    fn default() -> Self {
+        todo!();
+        /*
+        Self {
+            index: 0,
+            pointer: 0,
+            memory: VmMemory<u8, 30_000>;
+        }
+         */
+    }
+}
+
+#[derive(Debug, Default)]
 pub struct Vm {
     pub opcodes: Vec<Opcode>,
     index: usize,
     pointer: usize,
-    memory: [u8; 30_000],
+    memory: VmDefaultMemory,
 }
 
 impl Vm {
     pub fn from(opcodes: &[Opcode]) -> Self {
+        todo!();
+        /*
         Self {
             pointer: 100,
             index: 0,
             opcodes: opcodes.to_vec(),
-            memory: [0; 30_000],
+            memory: VmDefaultMemory::default(),
         }
+
+         */
     }
     pub fn run(&mut self) {
         while self.step().is_some() {}
     }
 
     pub fn step(&mut self) -> Option<()> {
+        /*
         match self.opcodes.get(self.index) {
             None => return None,
             Some(opcode) => match opcode {
@@ -179,6 +269,28 @@ impl Vm {
                 }
             },
         };
+         */
         Some(())
+    }
+}
+
+
+struct VmBreakpoint(usize);
+type VmBreakpoints = HashSet<VmBreakpoint>;
+
+#[derive(Default)]
+struct Debugger {
+    vm: Vm,
+    states: Vec<VmState>,
+    breakpoints: VmBreakpoints,
+}
+
+impl Debugger {
+    fn new(vm: Vm) -> Debugger {
+        Self {
+            vm,
+            states: Vec::default(),
+            ..Default::default()
+        }
     }
 }
