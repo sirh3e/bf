@@ -48,4 +48,19 @@ configure:
 .PHONY: clean
 clean:
 	rm -vf ./data/generated/*
+	rm -vf ./data/logs/*
 	cargo clean
+
+.PHONY: simon-configure
+simon-configure: configure transpile
+	gcc -O3 -o $(GENERATED_DIR)/mandelbrot.c.exe $(GENERATED_DIR)/mandelbrot.c
+	rustc -O $(GENERATED_DIR)/mandelbrot.rs -C target-cpu=native -o $(GENERATED_DIR)/mandelbrot.rs.exe
+
+.PHONY: simon-run
+simon-run:
+	chmod +x ./scripts/simon-run.sh
+	./scripts/simon-run.sh
+
+.PHONY: simon-export
+simon-export:
+	tar czf simon-benchmark.tar.gz --directory=./data/logs .

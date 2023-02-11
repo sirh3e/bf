@@ -1,4 +1,7 @@
 /data/generated/
+/data/logs/
+
+*.tar.gz
 
 .idea/
 /target

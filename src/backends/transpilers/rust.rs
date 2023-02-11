@@ -61,7 +61,7 @@ macro_rules! output {
 }
 
 fn main() {
-    let mut <POINTER> = 0 as usize;
+    let mut <POINTER> = 100 as usize;
     let mut <MEMORY> = [0 as u8; 30_000];
 
 <CODE>
