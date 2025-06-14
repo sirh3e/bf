@@ -6,12 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name = "c"
-path = "bin/transpilers/c.rs"
-
-[[bin]]
-name = "rust"
-path = "bin/transpilers/rust.rs"
+name = "transpilers"
+path = "bin/transpilers.rs"
 
 [[bin]]
 name = "vm"

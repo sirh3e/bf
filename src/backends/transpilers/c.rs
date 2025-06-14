@@ -1,4 +1,4 @@
-use crate::core::ir::Expression;
+use crate::{backends, core::ir::Expression};
 
 const MEMORY: &str = "MEMORY";
 const POINTER: &str = "POINTER";
@@ -55,11 +55,6 @@ int main() {
 pub struct Transpiler;
 
 impl Transpiler {
-    pub fn transpile(expressions: &[Expression]) -> String {
-        let code = Self::do_transpile(1, expressions);
-        RUNTIME.replace("<CODE>", &code)
-    }
-
     fn do_transpile(depth: usize, expressions: &[Expression]) -> String {
         let mut buffer = String::with_capacity(1024);
 
@@ -109,5 +104,12 @@ impl Transpiler {
             buffer.push_str(";\n");
         }
         buffer
+    }
+}
+
+impl backends::transpilers::Transpiler for Transpiler {
+    fn transpile(expressions: &[Expression]) -> String {
+        let code = Self::do_transpile(1, expressions);
+        RUNTIME.replace("<CODE>", &code)
     }
 }
