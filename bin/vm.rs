@@ -15,7 +15,7 @@ struct Args {
 }
 
 fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_BACKTRACE", "1");
+    //std::env::set_var("RUST_BACKTRACE", "1");
     let args = Args::parse();
 
     let mut text = String::new();

@@ -6,7 +6,7 @@ use std::{
 
 use bf::{
     backends::transpilers::{
-        c::Transpiler as CTranspiler, rust::Transpiler as RustTranspiler, Transpiler,
+        Transpiler, c::Transpiler as CTranspiler, rust::Transpiler as RustTranspiler,
     },
     core::{ir::Expression, pipeline::Pipeline},
 };
