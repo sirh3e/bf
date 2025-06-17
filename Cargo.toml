@@ -1,21 +1,8 @@
-[package]
-name = "bf"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = [
+    "src/xtask",
+    "src/bf"
+]
+resolver = "3"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[[bin]]
-name = "transpilers"
-path = "src/bin/transpilers.rs"
-
-[[bin]]
-name = "vm"
-path = "src/bin/vm.rs"
-
-[dependencies]
-clap = {version = "4.5.*", features = ["unstable-doc"]}
-
-[dev-dependencies]
-test-case = "3.3.*"
-pretty_assertions = "1.4.*"
