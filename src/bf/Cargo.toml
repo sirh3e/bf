@@ -1,0 +1,19 @@
+[package]
+name = "bf"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "transpilers"
+path = "src/bin/transpilers.rs"
+
+[[bin]]
+name = "vm"
+path = "src/bin/vm.rs"
+
+[dependencies]
+clap = {version = "4.5.*", features = ["unstable-doc"]}
+
+[dev-dependencies]
+test-case = "3.3.*"
+pretty_assertions = "1.4.*"
