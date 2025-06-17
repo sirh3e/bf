@@ -296,8 +296,8 @@ impl Optimizers {
 
 #[cfg(test)]
 mod test {
-    use crate::core::ir::optimizers::{ClearOptimizer, CopyOptimizer, Optimizer};
     use crate::core::ir::Expression;
+    use crate::core::ir::optimizers::{ClearOptimizer, CopyOptimizer, Optimizer};
     use pretty_assertions::assert_eq;
     use test_case::test_case;
 
