@@ -7,11 +7,11 @@ edition = "2024"
 
 [[bin]]
 name = "transpilers"
-path = "bin/transpilers.rs"
+path = "src/bin/transpilers.rs"
 
 [[bin]]
 name = "vm"
-path = "bin/vm.rs"
+path = "src/bin/vm.rs"
 
 [dependencies]
 clap = {version = "4.5.*", features = ["unstable-doc"]}
